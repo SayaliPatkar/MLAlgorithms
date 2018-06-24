@@ -3,6 +3,18 @@ import os
 import math
 import numpy as np
 
+"""
+Class uses naive bayes algorithm to predict whether to play golf or not using
+data from tennis.csv and given test examples
+For greater understanding of how Naive Bayes works internally i have written
+logic to calculate priors, likelihood and predicator
+
+Easy Way Out
+from sklearn.naive_bayes import GaussianNB
+model.fit(X, y)
+#Predict Output
+predicted= model.predict(x_test)
+"""
 script_dir = os.path.dirname(__file__) #<-- absolute dir the script is in
 data_file = os.path.join(script_dir, "Resources/tennis.csv")
 
@@ -69,6 +81,7 @@ print(probDict)
 # sunny + overcast + rainy = 1
 # similarly check forother attribute
 X = ['Sunny','Mild', 'High','FALSE']
+pX = probDict['Sunny'] * probDict['Mild'] * probDict['High']* probDict['False']
 # to find play or no play
 pYesGivnSunny = probDict['Sunny/Y']
 pYesGivnMild = probDict['Mild/Y']
@@ -76,7 +89,7 @@ pYesGivnHigh = probDict['High/Y']
 pYesGivnFalse = probDict['False/Y']
 pYes = yes/total
 
-pYesGivnX = pYesGivnSunny * pYesGivnMild * pYesGivnHigh * pYesGivnFalse * pYes
+pYesGivnX = pYesGivnSunny * pYesGivnMild * pYesGivnHigh * pYesGivnFalse * pYes / pX
 print(pYesGivnX)
 
 pNoGivnSunny = probDict['Sunny/N']
@@ -85,7 +98,32 @@ pNoGivnHigh = probDict['High/N']
 pNoGivnFalse = probDict['False/N']
 pNo = no/total
 
-pNoGivnX = pNoGivnSunny * pNoGivnMild * pNoGivnHigh * pNoGivnFalse * pNo
+pNoGivnX = pNoGivnSunny * pNoGivnMild * pNoGivnHigh * pNoGivnFalse * pNo / pX
+print(pNoGivnX)
+if pYesGivnX > pNoGivnX:
+    print("For given feature x =",X," player will play")
+else:
+    print("For given feature x =",X," player will NOT play")
+
+X = ['Sunny','Cool', 'High','True']
+pX = probDict['Sunny'] * probDict['Cool'] * probDict['High']* probDict['True']
+
+pYesGivnSunny = probDict['Sunny/Y']
+pYesGivnCool = probDict['Cool/Y']
+pYesGivnHigh = probDict['High/Y']
+pYesGivnTrue = probDict['True/Y']
+pYes = yes/total
+
+pYesGivnX = pYesGivnSunny * pYesGivnCool * pYesGivnHigh * pYesGivnTrue * pYes / pX
+print(pYesGivnX)
+
+pNoGivnSunny = probDict['Sunny/N']
+pNoGivnCool = probDict['Cool/N']
+pNoGivnHigh = probDict['High/N']
+pNoGivnTrue = probDict['True/N']
+pNo = no/total
+
+pNoGivnX = pNoGivnSunny * pNoGivnCool * pNoGivnHigh * pNoGivnTrue * pNo / pX
 print(pNoGivnX)
 if pYesGivnX > pNoGivnX:
     print("For given feature x =",X," player will play")
